@@ -9,9 +9,10 @@ const countdownElTitle = document.getElementById("countdown-title");
 const countdownBtn = document.getElementById("countdown-button");
 const timeElements = document.querySelectorAll("span");
 
-let countdownTitle = ' ' ;
+let countdownTitle = '' ;
 let countdownDate = '';
 let countdownValue = Date;
+let countdownActive;
 
 const second = 1000;
 const minute = second * 60;
@@ -28,14 +29,20 @@ function updateCountdown(e) {
     countdownTitle = e.srcElement[0].value;
     countdownDate = e.srcElement[1].value;
     console.log(countdownTitle, countdownDate );
+    // Check for valid date
+    if (countdownDate === "") {
+        alert ("Select a date")
+    } else {
     // Get number of current Date, update DOM
     countdownValue = new Date(countdownDate).getTime();
     console.log("countdown value:", countdownValue);
     updateDOM();
+    }
 }
 
 // Add Countdown and UI
 function updateDOM() {
+    countdownActive = setInterval(() => {
     const now = new Date().getTime();
     const distance = countdownValue - now;
     console.log("distance", distance);
@@ -56,8 +63,21 @@ function updateDOM() {
     inputContainer.hidden = true;
     // Showe Countdown
     countdownEl.hidden = false;
+    }, second);
 }
 
+// Reset All Values
+function reset() {
+    // Hide countdown, show input
+    countdownEl.hidden = true;
+    inputContainer.hidden = false;
+    // Stop the countdown
+    clearInterval(countdownActive);
+    // Reset values
+    countdownTitle = "";
+    countdownDate = "";
+}
 
 // Event Listeners
 countdownForm.addEventListener("submit", updateCountdown);
+countdownBtn.addEventListener("click", reset);
